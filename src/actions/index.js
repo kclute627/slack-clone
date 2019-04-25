@@ -7,8 +7,14 @@ export const setUser = user => {
     return {
         type: actionTypes.SET_USER,
         payload: {
-            currentuser: user,
-            isLoading: false,
+            currentUser: user,
+            
         }
+    }
+}
+
+export const clearUser = user => {
+    return {
+        type: actionTypes.CLEAR_USER
     }
 }
