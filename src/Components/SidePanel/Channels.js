@@ -15,10 +15,15 @@ class Channels extends Component {
         channelName: '',
         channelsRef: firebase.database().ref('channels'),
         channelDetials: '',
+        firstLoad: true, 
+        activeChannel: '',
     }
 
     componentDidMount(){
         this.addListeners();
+    }
+    componentWillUnmount(){
+        this.removeListeners();
     }
 
     addListeners = ()=> {
@@ -26,8 +31,26 @@ class Channels extends Component {
 
         this.state.channelsRef.on('child_added', snap => {
             loadedChannels.push(snap.val());
-            this.setState({channels: loadedChannels });
-        })
+            this.setState(
+                {channels: loadedChannels},
+                () => this.setFirstChannel());
+        });
+    }
+    removeListeners = () => {
+        this.state.channelsRef.off();
+    }
+
+    setFirstChannel = () => {
+        const { firstLoad, channels } = this.state;
+
+        const firstChannel = channels[0];
+
+        if(firstLoad && channels.length > 0){
+            this.props.setCurrentChannel(firstChannel);
+            this.setActiveChannel(firstChannel);
+        }
+
+        this.setState({firstLoad: false});
     }
 
     handleSubmit = event => {
@@ -46,6 +69,8 @@ class Channels extends Component {
     };
 
     changeChannel = channel => {
+        this.setActiveChannel(channel);
+
         this.props.setCurrentChannel(channel)
     }
 
@@ -85,6 +110,10 @@ class Channels extends Component {
             })
     }
 
+    setActiveChannel = channel => {
+        this.setState({activeChannel: channel.id})
+    }
+
     displayChannels = (arr) => {
         console.log(arr)      
             return (
@@ -94,6 +123,7 @@ class Channels extends Component {
             onClick={()=> this.changeChannel(cur)}
             name={cur.name}
             style={{opacity: 0.7}}
+            active = {cur.id === this.state.activeChannel}
             >
             # {cur.name}
             </Menu.Item>
