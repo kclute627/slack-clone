@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Menu } from 'semantic-ui-react';
 import Channels from './Channels';
 import UserPanel from './UserPanel';
+import DirectMessages from './DirectMessages';
 
 
 class SidePanel extends Component {
@@ -23,6 +24,7 @@ class SidePanel extends Component {
                 <Channels
                 name = {currentUser} 
                 /> 
+                <DirectMessages />
 
             </Menu>
 
