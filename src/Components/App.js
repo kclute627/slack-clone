@@ -13,7 +13,9 @@ const App = (props)=> {
   const {} = props;
   return(
     <Grid columns="equal" className="app" style={{background: '#eee'}}>
-      <ColorPanel/>
+      <ColorPanel
+      key = {props.currentUser && props.currentUser.name}
+      user = {props.currentUser}/>
       <SidePanel
       key={props.currentUser && props.currentUser.uid}
       currentUser ={props.currentUser}  />
@@ -25,7 +27,11 @@ const App = (props)=> {
         isPrivateChannel={props.isPrivateChannel}/>
       </Grid.Column>
       <Grid.Column width={4}>
-        <MettaPanel />
+        <MettaPanel
+          key = {props.currentChannel && props.currentChannel.name}
+          currentChannel = {props.currentChannel}
+         isPrivateChannel = {props.isPrivateChannel}
+         userPosts = {props.userPosts} />
       </Grid.Column>
       
   </Grid>
@@ -40,6 +46,7 @@ const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
   currentChannel: state.channel.currentChannel,
   isPrivateChannel: state.channel.isPrivateChannel,
+  userPosts: state.channel.userPosts
 } )
 
 
