@@ -10,15 +10,17 @@ import './App.css';
 
 
 const App = (props)=> {
-  const {} = props;
+  const {secondaryColor, primaryColor} = props;
   return(
-    <Grid columns="equal" className="app" style={{background: '#eee'}}>
+    <Grid columns="equal" className="app" style={{background: secondaryColor}}>
       <ColorPanel
       key = {props.currentUser && props.currentUser.name}
       user = {props.currentUser}/>
       <SidePanel
       key={props.currentUser && props.currentUser.uid}
-      currentUser ={props.currentUser}  />
+      currentUser ={props.currentUser}
+      primaryColor= {primaryColor} />
+
       <Grid.Column style={{marginLeft: 320}}>
         <Messages
         key={props.currentChannel && props.currentChannel.id }
@@ -46,7 +48,9 @@ const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
   currentChannel: state.channel.currentChannel,
   isPrivateChannel: state.channel.isPrivateChannel,
-  userPosts: state.channel.userPosts
+  userPosts: state.channel.userPosts,
+  primaryColor: state.color.primaryColor,
+  secondaryColor: state.color.secondaryColor
 } )
 
 

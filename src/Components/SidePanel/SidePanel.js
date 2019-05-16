@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { Menu } from 'semantic-ui-react';
 import Channels from './Channels';
 import UserPanel from './UserPanel';
@@ -10,7 +11,7 @@ class SidePanel extends Component {
 
 
     render(){
-        const { currentUser } = this.props;
+        const { currentUser, primaryColor } = this.props;
 
 
         return(
@@ -19,8 +20,9 @@ class SidePanel extends Component {
             inverted
             fixed='left'
             vertical
-            style={{background: '#4c3c4c', fontSize: '1.2rem'}}>
+            style={{background: primaryColor, fontSize: '1.2rem'}}>
                 <UserPanel
+                primaryColor = {primaryColor}
                 currentUser={currentUser} />
                 <Starred
                 currentUser={currentUser} />
