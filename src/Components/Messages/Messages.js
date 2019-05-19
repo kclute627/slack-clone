@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+
 import { connect } from 'react-redux';
 import { setUserPosts } from '../../actions'
 import { Segment, Comment } from 'semantic-ui-react';
@@ -7,6 +8,7 @@ import MessagesHeader from './MessagesHeader';
 import MessageForm from './MessageForm';
 import Message from './Message';
 import Typing from './Typing';
+import Skeleton from './Skeleton';
 
 class Messages extends Component {
 
@@ -28,15 +30,13 @@ class Messages extends Component {
         usersRef: firebase.database().ref('users'),
         typingRef: firebase.database().ref('typing'),
         typingUsers: [],
-        connectedRef: firebase.database().ref('.info/connected')
+        connectedRef: firebase.database().ref('.info/connected'),
+        
 
        
     }
-    componentDidUpdate(){
-        
-            this.scrollToBottom()
-        
-    }
+
+   
 
     
 
@@ -47,19 +47,29 @@ class Messages extends Component {
             this.addListners(channel.id);
             this.addUserStarListners(channel.id, user.uid)
         }
-
+        
+        
        
     }
 
+     
+    componentDidUpdate(){
+        {this.messagesEnd && this.scrollToBottom()}    
+    
+}
+    scrollToBottom = ()=> {
+       
+        this.messagesEnd.scrollIntoView({behavior: 'smooth'})
+       }
+
     
 
-    scrollToBottom = ()=> {
-        this.messagesEnd.scrollIntoView({behavior: 'smooth'});
-       }
+    
 
     addListners = channelId => {
         this.addMessageListner(channelId);
         this.addTypingListner(channelId)
+       
     }
 
     addTypingListner = channelId=>{
@@ -116,6 +126,8 @@ class Messages extends Component {
 
             this.countUsers(loadedMessages);
             this.countUserPosts(loadedMessages);
+            
+            
         })
     }
 
@@ -178,12 +190,19 @@ class Messages extends Component {
     }
 
     displayMessages = arr => {
+    
+       
         return arr.length > 0 && arr.map(cur=>(
             <Message
+                messageEnd = {this.messageEnd}
                 key={cur.timestamp}
                 messages={cur}
                 user = {this.state.user}
+                
+                
+               
             />
+            
         ))
 
     }
@@ -259,11 +278,25 @@ class Messages extends Component {
     }
 
 
+    displayMessagesSkeleton = loading => {
+        return loading ? (
+            <Fragment> 
+                {[...Array(15)].map((_, i) => (
+                    <Skeleton key={i}/>
+                ))}
+            </Fragment>
+
+        ): null;
+    }
+
+
     render(){
         //prettier-ignore
         const { messagesRef, channel, user, messages, numUsers, 
             searchTerm, searchResults, searchLoading, isPrivateChannel, 
-            isChannelStarred, typingUsers  } = this.state;
+            isChannelStarred, typingUsers, messagesLoading  } = this.state;
+
+            
 
         return(
             <Fragment>
@@ -277,16 +310,24 @@ class Messages extends Component {
                 isChannelStarred = {isChannelStarred}
                 
                 />
-
-                <Segment>
-                    <Comment.Group className='messages'>
-                        {searchTerm ? this.displayMessages(searchResults) : this.displayMessages(messages)}
-
-                        {this.displayTypingUsers(typingUsers)}
-                        <div ref={node => (this.messagesEnd = node)}></div>
+                
+                    <Segment>
                         
-                    </Comment.Group>
-                </Segment>
+                            <Comment.Group className='messages'>
+
+                                   
+                                {this.displayMessagesSkeleton(messagesLoading)}
+                                {searchTerm ? this.displayMessages(searchResults) : this.displayMessages(messages)  }
+
+                                {this.displayTypingUsers(typingUsers)}
+                                <div ref={node => this.messagesEnd = node}></div>                                               
+                              
+                            </Comment.Group>
+                            
+                            
+                    </Segment>
+                
+                
 
                 <MessageForm
                 messagesRef ={messagesRef}

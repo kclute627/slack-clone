@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import scrollToComponent from 'react-scroll-to-component';
 import moment from 'moment';
 import { Comment, Image } from 'semantic-ui-react';
 
@@ -16,7 +17,18 @@ const isImage = (message) => {
 const timeFromNow = (timestamp) => moment(timestamp).fromNow()
 
 
-const Message = ({ messages, user })=>{
+
+
+class Message extends Component {
+
+   
+    
+
+    render(){
+        const {messages, user, ref} = this.props;
+    
+ 
+    
     return (
         <Comment>
             <Comment.Avatar src={messages.user.avatar} />
@@ -25,11 +37,18 @@ const Message = ({ messages, user })=>{
                 <Comment.Metadata>{timeFromNow(messages.timestamp)}</Comment.Metadata>
                 
                 {isImage(messages)? <Image src={messages.image} className="message__image" /> :
-                    <Comment.Text>{messages.content}</Comment.Text>
+                    <Comment.Text>
+                    {messages.content}
+                    
+                    
+                    </Comment.Text>
+                      
                  }
             </Comment.Content>
         </Comment>
+        
     )
+}
 }
 
 
