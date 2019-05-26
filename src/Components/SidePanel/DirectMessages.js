@@ -24,6 +24,9 @@ class DirectMessages extends Component {
         }
     }
 
+   
+   
+
     addListners = userID => {
         let loadedUsers = [];
         this.state.usersRef.on('child_added', snap => {

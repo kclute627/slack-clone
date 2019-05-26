@@ -26,9 +26,7 @@ class Channels extends Component {
     componentDidMount(){
         this.addListeners();
     }
-    componentWillUnmount(){
-        this.removeListeners();
-    }
+    
 
     addListeners = ()=> {
         let loadedChannels = [];
@@ -85,6 +83,9 @@ class Channels extends Component {
 
     removeListeners = () => {
         this.state.channelsRef.off();
+        this.state.channels.forEach(cur=> {
+            this.state.messagesRef.child(cur.id).off();
+        })
     }
 
     setFirstChannel = () => {
